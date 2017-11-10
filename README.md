@@ -1,7 +1,7 @@
 # vigeo
 Geometrical Videos
 
-[Demo](https://i.imgur.com/iiI34UE.gifv)
+![Demo](https://i.imgur.com/iiI34UE.gifv)
 
 vigeo produces animated geometry videos.
 
