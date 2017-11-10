@@ -1,7 +1,9 @@
 # vigeo
-Videos and Geometry
+Geometrical Videos
 
-Procduces animated geometry videos.
+[Demo](https://i.imgur.com/iiI34UE.gifv)
+
+vigeo produces animated geometry videos.
 
 ## Dependencies
 
