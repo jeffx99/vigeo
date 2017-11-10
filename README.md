@@ -3,7 +3,8 @@ Videos and Geometry
 
 Procduces animated geometry videos.
 
-# Dependencies
+## Dependencies
 
-## SFML
-Used for the rendering, and currently windowing.
+### SFML 
+
+Used for the rendering, and currently windowing. To download SFML, go [here](https://www.sfml-dev.org/download.php).
