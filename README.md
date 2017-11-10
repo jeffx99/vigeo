@@ -1,11 +1,11 @@
-# vigeo
-Geometrical Videos
+# vigeo - Geometrical Videos
 
-![](https://i.imgur.com/iiI34UE.gif)
-
-vigeo produces animated geometry videos.
+<p align="center">
+  <img src="https://i.imgur.com/iiI34UE.gif?raw=true" alt="Demo"/>
+</p>
 
 ## Dependencies
+
 
 ### SFML 
 
