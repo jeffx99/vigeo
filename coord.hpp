@@ -4,6 +4,12 @@
 #include <math.h>
 
 #define COORD_EPSILON 0.00001f
+#define PLANE_TO_SCREEN 30.0f
+#define SCREEN_TO_PLANE 0.0333333333f
+#define SCREEN_H 540
+
+struct Coord;
+using Vector = Coord;
 
 struct Coord {
 	float x, y;
@@ -39,9 +45,9 @@ struct Coord {
 
 };
 
-sf::Vector2f plane_to_screen(Coord plane_coord, float screen_height);
-Coord screen_to_plane(sf::Vector2f screen_coord, float screen_height);
-float dist(Coord A, Coord B);
+sf::Vector2f plane_to_screen(Coord plane_coord);
+Coord screen_to_plane(sf::Vector2f screen_coord);
+
 inline Coord operator +(Coord lhs, const Coord& rhs) {
 	lhs += rhs;
 	return lhs;

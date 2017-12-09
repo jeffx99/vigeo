@@ -1,11 +1,12 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "point.hpp"
-#include "segment.hpp"
-#include "circle.hpp"
+
 #include "geo.hpp"
 #include "renderer.hpp"
+#include "segment_paths.hpp"
+#include "circle_path.hpp"
+#include "point.hpp"
 
 int main() {
 	sf::ContextSettings settings;
@@ -34,17 +35,17 @@ int main() {
 		{11, Itime(15, 16)} // dot the T
 	};
 	
-	Coord A(450, 350);
-	Coord B(200, 175);
-	Coord C(550, 150);
+	Coord A(15, 11);
+	Coord B(6.6, 6);
+	Coord C(18, 5);
 
 	
-	Coord D = project(A, B, C);
+	Coord D = project(A, Segment(B, C));
 	Coord M = (A + B) / 2, N = (A + C) / 2;
-	Coord L = (B + C) / 2 + perp(B, C);
+	Coord L = (B + C) / 2 + perp(B - C);
 
-	Coord Bp = reflect(B, D, M), Cp = reflect(C, D, N);
-	Coord Ap = reflect(A, (B + C) / 2, L);
+	Coord Bp = reflect(B, Segment(D, M)), Cp = reflect(C, Segment(D, N));
+	Coord Ap = reflect(A, Segment((B + C) / 2, L));
 
 	Coord O = circumcenter(Ap, Bp, Cp);
 	Coord O1 = circumcenter(A, B, D);
@@ -53,11 +54,11 @@ int main() {
 
 	renderer.current_id = 1;
 	Point pA(A);
-	Segment AB(A, B);
+	SegmentPath AB(A, B);
 	renderer.current_id = 2;
-	Segment BC(B, C);
+	SegmentPath BC(B, C);
 	renderer.current_id = 3;
-	Segment CA(C, A);
+	SegmentPath CA(C, A);
 	renderer.current_id = 4;
 	Tick tAM(A, M, 1);
 	Tick tMB(M, B, 1);
@@ -68,34 +69,35 @@ int main() {
 	Point pM(M);
 	Point pN(N);
 	//Point pN(N);
-	Segment AD(A, D);
+	SegmentPath AD(A, D);
 	renderer.current_id = 5;
-	Line DM(D, M);
-	Line DN(D, N);
+	LinePath DM(D, M);
+	LinePath DN(D, N);
 	renderer.current_id = 6;
 	Point pBp(Bp);
-	Segment BBp(B, Bp);
+	SegmentPath BBp(B, Bp);
 	renderer.current_id = 7;
 	Point pCp(Cp);
-	Segment CCp(C, Cp); 
+	SegmentPath CCp(C, Cp); 
 	renderer.current_id = 8;
-	Line l((B + C) / 2, L);
+	LinePath l((B + C) / 2, L);
 	Point pAp(Ap);
 	renderer.current_id = 9;
-	Segment AAp(A, Ap);
+	SegmentPath AAp(A, Ap);
 	renderer.current_id = 10;
 	Point pO(O);
-	Circle ApBpCp(O, Ap);
+	CirclePath ApBpCp(O, Ap);
 	renderer.current_id = 11;
-	Line ABp(A, Bp);
-	Line ACp(A, Cp);
+	LinePath ABp(A, Bp);
+	LinePath ACp(A, Cp);
 	Point pO1(O1);
-	Circle ABD(O1, D);
+	CirclePath ABD(O1, D);
 	Point pO2(O2);
-	Circle ACD(O2, D);
+	CirclePath ACD(O2, D);
+	
 
-
-	{/*Coord D, E, F, Oa, Ob, Oc;
+	
+  /*Coord D, E, F, Oa, Ob, Oc;
 	D = (2 * B + C) / 3;
 	E = (3 * A + C) / 4;
 	F = (A + B) / 2;
@@ -105,20 +107,20 @@ int main() {
 	Oc = circumcenter(C, D, E);
 
 	renderer.current_id = 1;
-	Segment(A, B);
-	Segment BC(B, C);
-	Segment CA(C, A);
+	SegmentPath AB(A, B);
+	SegmentPath BC(B, C);
+	SegmentPath CA(C, A);
 
 	renderer.current_id = 2;
-	Segment DE(D, E);
-	Segment EF(E, F);
-	Segment FD(F, D);
+	SegmentPath DE(D, E);
+	SegmentPath EF(E, F);
+	SegmentPath FD(F, D);
 
 
 	renderer.current_id = 3;
-	Circle AEF(Oa, A);
-	Circle BDF(Ob, B);
-	Circle CDE(Oc, C);*/}
+	CirclePath AEF(Oa, A);
+	CirclePath BDF(Ob, B);
+	CirclePath CDE(Oc, C);*/
 
 	while (window.isOpen()) {
 		sf::Event event;

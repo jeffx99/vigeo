@@ -1,67 +1,38 @@
 #include "segment.hpp"
-#include <iostream>
 
-// Thickness is 1 pixel(s)
-void Segment::draw(sf::RenderTarget * target, float k) {
-	float weight = 0.5f;
-	sf::Vector2f end1_pos = plane_to_screen(end1, target->getSize().y);
-	sf::Vector2f end2_pos = plane_to_screen(end2, target->getSize().y);
-
-	float angle = atan2f(end2_pos.y - end1_pos.y, end2_pos.x - end1_pos.x);
-	sf::Vector2f offset(cosf(angle + 0.5f * M_PI), sinf(angle + 0.5f * M_PI));
-	offset *= weight;
-
-	sf::VertexArray v_array(sf::TriangleStrip);
-	v_array.append(sf::Vertex(end1_pos + offset, sf::Color::Cyan));
-	v_array.append(sf::Vertex(end1_pos - offset, sf::Color::Cyan));
-	v_array.append(sf::Vertex(end1_pos + k*(end2_pos - end1_pos) + offset, sf::Color::Cyan));
-	v_array.append(sf::Vertex(end1_pos + k*(end2_pos - end1_pos) - offset, sf::Color::Cyan));
-
-	target->draw(v_array);
+Vector perp(Segment s) {
+	return perp(s.P1 - s.P2);
 }
 
-void Tick::draw(sf::RenderTarget * target, float k) {
-	float length = 20.f;
-	sf::Vector2f end1_pos = plane_to_screen(end1, target->getSize().y);
-	sf::Vector2f end2_pos = plane_to_screen(end2, target->getSize().y);
-	sf::Vector2f mid_pos = (end1_pos + end2_pos) * 0.5f;
-
-	float angle = atan2f(end2_pos.y - end1_pos.y, end2_pos.x - end1_pos.x);
-	sf::Vector2f perp_offset(cosf(angle + 0.5f * M_PI), sinf(angle + 0.5f * M_PI));
-	perp_offset *= (length * 0.5f);
-
-	sf::Vector2f para_offset(-sinf(angle + 0.5f * M_PI), cosf(angle + 0.5f * M_PI));
-	para_offset *= length;
-
-	sf::Vector2f step_offset = para_offset / float(count + 1);
-
-	sf::VertexArray v_array(sf::Lines);
-	for (int i = 1; i <= count; ++i) {
-		v_array.append(sf::Vertex(mid_pos - perp_offset - para_offset + float(i) * step_offset, sf::Color::White));
-		v_array.append(sf::Vertex(mid_pos + (2 * k - 1)*perp_offset - para_offset + float(i) * step_offset, sf::Color::White));
-		//v_array.append(sf::Vertex(end1_pos + k*(end2_pos - end1_pos) + offset, sf::Color::Cyan));
-		//v_array.append(sf::Vertex(end1_pos + k*(end2_pos - end1_pos) - offset, sf::Color::Cyan));
-	}
-	target->draw(v_array);
+Vector perp(Line l) {
+	return perp(l.P1 - l.P2);
 }
 
-void Line::draw(sf::RenderTarget * target, float k) {
-	float length = 600.f; // how far are we going in either direction
-	float weight = 0.5f;
-	sf::Vector2f p1_pos = plane_to_screen(p1, target->getSize().y);
-	sf::Vector2f p2_pos = plane_to_screen(p2, target->getSize().y);
-	sf::Vector2f start = 0.5f * (p1_pos + p2_pos);
+Coord project(Coord P, Segment s) {
+	Vector u = s.P2 - s.P1;
+	Vector v = P - s.P1;
+	return s.P1 + (dot(u,v) / dot(u, u)) * u;
+}
 
-	float angle = atan2f(p2_pos.y - p1_pos.y, p2_pos.x - p1_pos.x);
-	sf::Vector2f dir(cosf(angle), sinf(angle));
-	sf::Vector2f offset(cosf(angle + 0.5f * M_PI), sinf(angle + 0.5f * M_PI));
-	offset *= weight;
+Coord project(Coord P, Line l) {
+	Vector u = l.P2 - l.P1;
+	Vector v = P - l.P1;
+	return l.P1 + (dot(u, v) / dot(u, u)) * u;
+}
 
-	sf::VertexArray v_array(sf::TriangleStrip);
-	v_array.append(sf::Vertex(start - k*length*dir + offset, sf::Color(0, 128, 255)));
-	v_array.append(sf::Vertex(start - k*length*dir - offset, sf::Color(0, 128, 255)));
-	v_array.append(sf::Vertex(start + k*length*dir + offset, sf::Color(0, 128, 255)));
-	v_array.append(sf::Vertex(start + k*length*dir - offset, sf::Color(0, 128, 255)));
+Coord reflect(Coord P, Segment s) {
+	return 2 * project(P, s) - P;
+}
 
-	target->draw(v_array);
+Coord reflect(Coord P, Line l) {
+	return 2 * project(P, l) - P;
+}
+
+Coord line_intersect(Line l1, Line l2) {
+	float c1 = cross(l1.P1, l1.P2), c2 = cross(l2.P1, l2.P2), c3 = cross(l1.P1 - l1.P2, l2.P1 - l2.P2);
+
+	float Px = (c1 * (l2.P1.x - l2.P2.x) - c2 * (l1.P1.x - l1.P2.x)) / c3;
+	float Py = (c1 * (l2.P1.y - l2.P2.y) - c2 * (l1.P1.y - l1.P2.y)) / c3;
+
+	return Coord(Px, Py);
 }

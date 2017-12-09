@@ -1,15 +1,12 @@
 #include "coord.hpp"
 
-sf::Vector2f plane_to_screen(Coord plane_coord, float screen_height) {
-	sf::Vector2f screen_coord(plane_coord.x, screen_height - plane_coord.y);
+sf::Vector2f plane_to_screen(Coord plane_coord) {
+	sf::Vector2f screen_coord(plane_coord.x * PLANE_TO_SCREEN, SCREEN_H - plane_coord.y * PLANE_TO_SCREEN);
 	return screen_coord;
 }
 
-Coord screen_to_plane(sf::Vector2f screen_coord, float screen_height) {
-	Coord plane_coord(screen_coord.x, screen_height - screen_coord.y);
+Coord screen_to_plane(sf::Vector2f screen_coord) {
+	Coord plane_coord(screen_coord.x * SCREEN_TO_PLANE, (SCREEN_H - screen_coord.y) * SCREEN_TO_PLANE);
 	return plane_coord;
 }
 
-float dist(Coord A, Coord B) {
-	return sqrtf((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y));
-}

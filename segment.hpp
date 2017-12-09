@@ -1,32 +1,22 @@
 #pragma once
-#include "primitive.hpp"
-#include "point.hpp"
+#include "geo.hpp"
 
-class Segment : public Primitive {
-public:
-	Coord end1, end2; //endpoints
+struct Segment {
+	Coord P1, P2;
 
-	Segment() {}
-	Segment(Coord p1, Coord p2) : end1(p1), end2(p2) {};
- 	void draw(sf::RenderTarget* target, float t);
+	Segment(Coord P1, Coord P2) : P1(P1), P2(P2) {}
 };
 
-class Tick : public Primitive {
-public:
-	Coord end1, end2;
-	int count = 2;
-	
-	Tick() {}
-	Tick(Segment seg, unsigned int count = 1) : end1(seg.end1), end2(seg.end2), count(count) {};
-	Tick(Coord p1, Coord p2, unsigned int count = 1) : end1(p1), end2(p2), count(count) {};
-	void draw(sf::RenderTarget* target, float t);
+struct Line {
+	Coord P1, P2;
+
+	Line(Coord P1, Coord P2) : P1(P1), P2(P2) {}
 };
 
-class Line : public Primitive {
-public:
-	Coord p1, p2; //points on the line
-
-	Line() {}
-	Line(Coord p1, Coord p2) : p1(p1), p2(p2) {};
-	void draw(sf::RenderTarget* target, float t);
-};
+Vector perp(Segment s);
+Vector perp(Line l);
+Coord project(Coord P, Segment s); // Project P onto segment s
+Coord project(Coord P, Line l); // Project P onto segment s
+Coord reflect(Coord P, Segment s); // Reflect P over line l
+Coord reflect(Coord P, Line l); // Reflect P over line l
+Coord line_intersect(Line l1, Line l2);
